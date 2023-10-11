@@ -17,11 +17,33 @@ app.use(express.static('public'));
 app.get("/", function (req, res) {
   res.sendFile(__dirname + '/views/index.html');
 });
+app.get("/api/:datee", function(req, res) {
+  let datee = req.params.datee;
+
+  if (/^\d{5,}$/.test(datee))
+    datee = parseInt(datee);
+
+  const date = new Date(datee);
+
+  if (date.toString() == "Invalid Date") {
+    res.json({
+      "error": "Invalid Date"
+    });
+  } else {
+    res.json({
+      "unix": date.valueOf(),
+      "utc": date.toUTCString()
+    });
+  }
+});
 
 
-// your first API endpoint... 
-app.get("/api/hello", function (req, res) {
-  res.json({greeting: 'hello API'});
+
+app.get("/api/", function (req, res) {
+
+  let date = new Date();
+  res.json({unix: date.getTime(),
+           utc: date.toUTCString()})
 });
 
 
